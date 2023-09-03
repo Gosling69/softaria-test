@@ -1,0 +1,176 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Softaria-test API",
+        "version": "v1"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:5000"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Get Pages served by backend",
+            "description": "API To get templates and static files for test"
+        }
+    ],
+    "paths": {
+        "/template/{name}": {
+            "get": {
+                "summary": "returns different html page every time",
+                "tags": ["Get Pages served by backend"],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": false,
+                        "description": "user's name displayed in title tag",
+                        "schema": {
+                            "type": "string",
+                            "example": "Buddy"
+                        }
+                    }
+                ],
+                "description": "Generates template with timestamp and user name",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "document": {
+                                "schema": {
+                                    "type": "html",
+                                    "example": "<html><head><title>Hey, Buddy</title></head><body><h1>Hello there!</h1><h2>Sat, 02 Sep 2023 03:50:10 GMT</h2></body></html>"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/static/{num}": {
+            "get": {
+                "summary": "returns static html page from staticPages folder",
+                "tags": ["Get Pages served by backend"],
+                "parameters": [
+                    {
+                        "name": "num",
+                        "in": "path",
+                        "required": false,
+                        "description": "number of page from folder",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        }
+                    }
+                ],
+                "description": "Returns staticpage{num}.html file",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "document": {
+                                "schema": {
+                                    "type": "html",
+                                    "example": "<html><head><title>Document 1</title></head><body><h1>Hello there!</h1><h2>Sat, 02 Sep 2023 03:50:10 GMT</h2></body></html>"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/get_pages": {
+            "get": {
+                "summary": "returns previous and current pages with hashes, etags and last modifieds (if present)",
+                "tags": ["Pages Api"],
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "document": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/getPagesResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/insert_pages": {
+            "put": {
+                "summary": "Add links to either of collections: PreviousSites, CurrentSites",
+                "tags": ["Pages Api"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/insertPagesRequest"
+                            },
+                            "example": {
+                                "collectionName": "PreviousSites",
+                                "links": [
+                                    "http://localhost:5000/static/1",
+                                    "http://localhost:5000/static/2",
+                                    "http://localhost:5000/static/3"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "description": "",
+                "responses": {
+                    "200": {
+                        "description": "Returns list of failed links",
+                        "content": {
+                            "document": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/insertPagesResponse"
+                                },
+                                "example": ["http://localhost:5000/static/6"]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "insertPagesRequest": {
+                "type": "object",
+                "properties": {
+                    "collectionName": {
+                        "type": "string"
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "type":"string"
+                        }
+                    }
+                }
+            },
+            "insertPagesResponse": {
+                "type": "array",
+                "items": {
+                    "type":"string"
+                }
+            },
+            "getPagesResponse": {
+                "type": "object",
+                "properties": {
+                    "CurrentSites": {
+                        "type": "object"
+                    },
+                    "PreviousSites": {
+                        "type": "object"
+                    }
+                }
+            }
+        }
+    }
+}

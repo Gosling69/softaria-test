@@ -1,0 +1,7 @@
+.diffsTab > li > button {
+    background-color: inherit !important;
+    border: none !important;
+}
+.diffsTab > li > button.nav-link.active {
+    text-decoration: underline;
+}
