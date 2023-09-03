@@ -59,14 +59,14 @@ export const Diffs = ({ data }: diffsProps) => {
             ) {
                 continue;
             }
-            if (CurrentSites[key].hash === PreviousSites[key].hash) {
-                continue;
-            }
             if (
                 CurrentSites[key].eTag &&
                 PreviousSites[key].eTag &&
                 CurrentSites[key].eTag === PreviousSites[key].eTag
             ) {
+                continue;
+            }
+            if (CurrentSites[key].hash === PreviousSites[key].hash) {
                 continue;
             }
             changed.push(key);
@@ -79,6 +79,7 @@ export const Diffs = ({ data }: diffsProps) => {
             ),
         );
     }, [data]);
+    
     useEffect(() => {
         calculateMissing();
         calculateNew();

@@ -45,6 +45,7 @@ function App() {
                                     <SitesInput
                                         siteList={Object.keys(CurrentSites)}
                                         refetch={refetch}
+                                        collectionName="CurrentSites"
                                     />
                                 </Col>
                             </Row>

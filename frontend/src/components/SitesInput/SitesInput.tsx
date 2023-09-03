@@ -17,13 +17,17 @@ import {
 import { NotificationToast } from "@components/NotificationToast";
 import "./SitesInput.css";
 
+type SitesInputProps = {
+    refetch : Function,
+    siteList: string[]
+    collectionName: string
+}
+
 export const SitesInput = ({
     refetch,
     siteList,
-}: {
-    refetch: Function;
-    siteList: string[];
-}) => {
+    collectionName
+}: SitesInputProps) => {
     const [input, setInput] = useState<string>("");
     const [errors, setErrors] = useState<ToastError[]>([]);
     const [newLinks, setNewLinks] = useState<string[]>([]);
@@ -72,7 +76,6 @@ export const SitesInput = ({
 
     const onSubmit = async () => {
         const linksToSend = input.split("\n").filter((url) => url.length);
-
         if (!linksToSend.length) {
             setErrors([
                 {
@@ -82,7 +85,6 @@ export const SitesInput = ({
             ]);
             return;
         }
-
         for (let link of linksToSend) {
             if (validateInput(link) === "wrong") {
                 setErrors([
@@ -96,7 +98,7 @@ export const SitesInput = ({
         }
 
         const body = {
-            collectionName: "CurrentSites",
+            collectionName,
             links: linksToSend,
         };
 
